@@ -15,7 +15,7 @@ public class NegativeLikesDeleteTest implements CredentialsValues{
     public static final String FOREIGN_ITEM_ID = "1";
 
     @Test (priority = 1)
-    void likesDeleteTest() {
+    void negativeLikesDeleteTest() {
 
         RestAssured.baseURI = "https://api.vk.com";
         RestAssured.basePath = "/method";

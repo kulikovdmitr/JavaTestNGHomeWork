@@ -1,4 +1,4 @@
-package LikesGetList;
+package LikesIsLiked;
 
 import Credentials.CredentialsValues;
 import io.restassured.RestAssured;
@@ -11,7 +11,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
-public class LikesGetListTest implements CredentialsValues {
+public class LikesIsLikedTest implements CredentialsValues {
 
     String postIdValue;
 
@@ -62,7 +62,7 @@ public class LikesGetListTest implements CredentialsValues {
     }
 
     @Test (priority = 1)
-    void likesGetListTest() {
+    void likesIsLikedTest() {
 
         RestAssured.baseURI = "https://api.vk.com";
         RestAssured.basePath = "/method";
@@ -78,12 +78,12 @@ public class LikesGetListTest implements CredentialsValues {
                         .formParam("type", TYPE_OF_DATA)
                         .formParam("owner_id",GROUP_ID)
                         .formParam("item_id",postIdValue)
-                        .post("/likes.getList")
+                        .post("/likes.isLiked")
                         .then()
                         .log().all()
                         .statusCode(200)
-                        .body("response.count",equalTo(1))
-                        .body("response.items[0]",equalTo(ACCOUNT_ID_NUMBER))
+                        .body("response.liked",equalTo(1))
+                        .body("response.copied",equalTo(0))
                         .extract()
                         .response();
         response.getBody().print();
@@ -114,5 +114,3 @@ public class LikesGetListTest implements CredentialsValues {
         response.getBody().print();
     }
 }
-
-
