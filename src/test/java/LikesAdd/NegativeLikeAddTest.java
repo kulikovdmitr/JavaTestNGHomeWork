@@ -2,6 +2,7 @@ package LikesAdd;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -65,7 +66,7 @@ public class NegativeLikeAddTest {
         response.getBody().print();
     }
 
-    @Test(priority = 3)
+    @AfterTest
     void tearDown()
     {
         System.out.println("Завершаем тест");

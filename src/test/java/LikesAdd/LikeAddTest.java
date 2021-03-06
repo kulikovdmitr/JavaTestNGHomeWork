@@ -2,9 +2,10 @@ package LikesAdd;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.sql.Date;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
@@ -18,7 +19,7 @@ public class LikeAddTest {
     public static final String API_VERSION = "5.130";
     String postIdValue;
 
-    @Test(priority = 1)
+    @BeforeMethod
     void setUp() {
 
         RestAssured.baseURI = "https://api.vk.com";
@@ -33,7 +34,7 @@ public class LikeAddTest {
                         .formParam("access_token", ACCESS_TOKEN)
                         .formParam("v", API_VERSION)
                         .formParam("owner_id",GROUP_ID)
-                        .formParam("message","Autotest_VK_LikeAddTest" + Date.getTime())
+                        .formParam("message","Autotest_VK_LikeAddTest")
                         .formParam("signed",1)
                         .post("/wall.post")
                         .then()
@@ -45,7 +46,7 @@ public class LikeAddTest {
         postIdValue = response.then().extract().jsonPath().getString("response.post_id");
     }
 
-    @Test (priority = 2)
+    @Test (priority = 1)
     void likesAddTest() {
 
         RestAssured.baseURI = "https://api.vk.com";
@@ -73,7 +74,7 @@ public class LikeAddTest {
         System.out.println("Успешно поставили лайк к созданной записи № " + postIdValue);
     }
 
-    @Test(priority = 3)
+    @AfterTest
     void tearDown()
     {
         System.out.println("Удаляем запись № " + postIdValue);

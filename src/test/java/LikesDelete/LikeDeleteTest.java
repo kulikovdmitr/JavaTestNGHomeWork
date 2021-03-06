@@ -2,6 +2,8 @@ package LikesDelete;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static io.restassured.RestAssured.given;
@@ -13,7 +15,7 @@ public class LikeDeleteTest {
     public static final String ACCESS_TOKEN = "baffe176851b18fbdc6e82b1aa9de7ca51ef49cb0d3fb6880ec195e5cb75b91b748cb6ee5662e26473c6d";
     String postIdValue;
 
-    @Test(priority = 1)
+    @BeforeMethod
     void setUp() {
         //cоздаем запись и ставим лайк
         RestAssured.baseURI = "https://api.vk.com";
@@ -59,7 +61,7 @@ public class LikeDeleteTest {
         responseLikeAdd.getBody().print();
     }
 
-    @Test (priority = 2)
+    @Test (priority = 1)
     void likesDeleteTest() {
 
         RestAssured.baseURI = "https://api.vk.com";
@@ -86,7 +88,7 @@ public class LikeDeleteTest {
         response.getBody().print();
     }
 
-    @Test(priority = 3)
+    @AfterTest
     void tearDown()
     {
         System.out.println("Завершаем тест. Успешно поставили лайк к созданной записи № " + postIdValue);
