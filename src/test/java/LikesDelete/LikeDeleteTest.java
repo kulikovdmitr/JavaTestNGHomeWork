@@ -1,5 +1,6 @@
 package LikesDelete;
 
+import Credentials.CredentialsValues;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.testng.annotations.AfterTest;
@@ -10,9 +11,8 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
-public class LikeDeleteTest {
+public class LikeDeleteTest implements CredentialsValues {
 
-    public static final String ACCESS_TOKEN = "baffe176851b18fbdc6e82b1aa9de7ca51ef49cb0d3fb6880ec195e5cb75b91b748cb6ee5662e26473c6d";
     String postIdValue;
 
     @BeforeMethod
@@ -28,8 +28,8 @@ public class LikeDeleteTest {
                         .when()
                         .header("Content-Type", "application/x-www-form-urlencoded")
                         .formParam("access_token", ACCESS_TOKEN)
-                        .formParam("v", "5.130")
-                        .formParam("owner_id", "-203027909")
+                        .formParam("v", API_VERSION)
+                        .formParam("owner_id", GROUP_ID)
                         .formParam("message", "Autotest_VK")
                         .formParam("signed", 1)
                         .post("/wall.post")
@@ -47,9 +47,9 @@ public class LikeDeleteTest {
                         .when()
                         .header("Content-Type", "application/x-www-form-urlencoded")
                         .formParam("access_token", ACCESS_TOKEN)
-                        .formParam("v", "5.130")
-                        .formParam("type", "post")
-                        .formParam("owner_id", "-203027909")
+                        .formParam("v", API_VERSION)
+                        .formParam("type", TYPE_OF_DATA)
+                        .formParam("owner_id", GROUP_ID)
                         .formParam("item_id", postIdValue)
                         .post("/likes.add")
                         .then()
@@ -74,15 +74,15 @@ public class LikeDeleteTest {
                         .when()
                         .header("Content-Type", "application/x-www-form-urlencoded")
                         .formParam("access_token", ACCESS_TOKEN)
-                        .formParam("v", "5.130")
-                        .formParam("type", "post")
-                        .formParam("owner_id","-203027909")
+                        .formParam("v", API_VERSION)
+                        .formParam("type", TYPE_OF_DATA)
+                        .formParam("owner_id",GROUP_ID)
                         .formParam("item_id",postIdValue)
                         .post("/likes.delete")
                         .then()
                         .log().all()
                         .statusCode(200)
-                        .body("response.likes",equalTo(1))
+                        .body("response.likes",equalTo(0))
                         .extract()
                         .response();
         response.getBody().print();

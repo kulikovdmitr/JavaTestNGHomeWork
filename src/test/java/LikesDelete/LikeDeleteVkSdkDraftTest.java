@@ -1,5 +1,6 @@
 package LikesDelete;
 
+import Credentials.CredentialsValues;
 import com.vk.api.sdk.client.VkApiClient;
 import com.vk.api.sdk.client.actors.ServiceActor;
 import com.vk.api.sdk.client.actors.UserActor;
@@ -16,10 +17,8 @@ import static org.hamcrest.Matchers.notNullValue;
 import com.vk.api.sdk.client.TransportClient;
 import com.vk.api.sdk.httpclient.HttpTransportClient;
 
-public class LikeDeleteVkSdkDraftTest {
-    public static final Integer APP_ID = 123456;
-    public static final String ACCESS_TOKEN = "";
-    public static final String CLIENT_SECRET = "";;
+public class LikeDeleteVkSdkDraftTest implements CredentialsValues {
+
 
     TransportClient transportClient = HttpTransportClient.getInstance();
     VkApiClient vk = new VkApiClient(transportClient);
