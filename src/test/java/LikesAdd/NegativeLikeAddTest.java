@@ -7,44 +7,16 @@ import org.testng.annotations.Test;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.notNullValue;
 
 public class NegativeLikeAddTest {
 
-    public static final String CLIENT_ID = "";
-    public static final String CLIENT_SECRET = "";
-    public static final String ACCESS_TOKEN = "";
-    String access_token = "";
+    public static final String ACCESS_TOKEN = "baffe176851b18fbdc6e82b1aa9de7ca51ef49cb0d3fb6880ec195e5cb75b91b748cb6ee5662e26473c6d";
 
     @DataProvider(name = "test-data")
     public Object[] createTestData() {
         return new String[][] {
                 {"likes.add", "5.130", "post", "", "22"}
         };
-    }
-
-    @Test(priority = 1)
-    void setUp()
-    {
-        RestAssured.baseURI = "https://oauth.vk.com";
-        RestAssured.basePath = "/access_token";
-
-        Response response =
-                given()
-                        .log().all()
-                        .when()
-                        .formParam("client_id", CLIENT_ID)
-                        .formParam("client_secret", CLIENT_SECRET)
-                        .formParam("v", "5.130")
-                        .formParam("grant_type","client_credentials")
-                        .get("")
-                        .then()
-                        .log().all()
-                        .statusCode(200)
-                        .body("access_token",notNullValue())
-                        .extract()
-                        .response();
-        access_token = response.getBody().path("access_token");
     }
 
     @Test(priority = 2, dataProvider = "test-data")

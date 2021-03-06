@@ -1,52 +1,66 @@
-package LikesAdd;
+package LikesDelete;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
 
-import java.sql.Date;
-
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
-public class LikeAddTest {
+public class LikeDeleteTest {
 
     public static final String ACCESS_TOKEN = "baffe176851b18fbdc6e82b1aa9de7ca51ef49cb0d3fb6880ec195e5cb75b91b748cb6ee5662e26473c6d";
-    public static final String GROUP_ID = "-203027909";
-    public static final String TYPE_OF_DATA = "post";
-    public static final String API_VERSION = "5.130";
     String postIdValue;
 
     @Test(priority = 1)
     void setUp() {
-
+        //cоздаем запись и ставим лайк
         RestAssured.baseURI = "https://api.vk.com";
         RestAssured.basePath = "/method";
         RestAssured.urlEncodingEnabled = true;
 
-        Response response =
+        Response responsePostAdd =
                 given()
                         .log().all()
                         .when()
                         .header("Content-Type", "application/x-www-form-urlencoded")
                         .formParam("access_token", ACCESS_TOKEN)
-                        .formParam("v", API_VERSION)
-                        .formParam("owner_id",GROUP_ID)
-                        .formParam("message","Autotest_VK_LikeAddTest" + Date.getTime())
-                        .formParam("signed",1)
+                        .formParam("v", "5.130")
+                        .formParam("owner_id", "-203027909")
+                        .formParam("message", "Autotest_VK")
+                        .formParam("signed", 1)
                         .post("/wall.post")
                         .then()
                         .log().all()
                         .statusCode(200)
-                        .body("response.post_id",notNullValue())
+                        .body("response.post_id", notNullValue())
                         .extract()
                         .response();
-        postIdValue = response.then().extract().jsonPath().getString("response.post_id");
+        postIdValue = responsePostAdd.then().extract().jsonPath().getString("response.post_id");
+
+        Response responseLikeAdd =
+                given()
+                        .log().all()
+                        .when()
+                        .header("Content-Type", "application/x-www-form-urlencoded")
+                        .formParam("access_token", ACCESS_TOKEN)
+                        .formParam("v", "5.130")
+                        .formParam("type", "post")
+                        .formParam("owner_id", "-203027909")
+                        .formParam("item_id", postIdValue)
+                        .post("/likes.add")
+                        .then()
+                        .log().all()
+                        .statusCode(200)
+                        .body("response.likes", equalTo(1))
+                        .extract()
+                        .response();
+        responseLikeAdd.getBody().print();
     }
 
     @Test (priority = 2)
-    void likesAddTest() {
+    void likesDeleteTest() {
 
         RestAssured.baseURI = "https://api.vk.com";
         RestAssured.basePath = "/method";
@@ -58,11 +72,11 @@ public class LikeAddTest {
                         .when()
                         .header("Content-Type", "application/x-www-form-urlencoded")
                         .formParam("access_token", ACCESS_TOKEN)
-                        .formParam("v", API_VERSION)
-                        .formParam("type", TYPE_OF_DATA)
-                        .formParam("owner_id",GROUP_ID)
+                        .formParam("v", "5.130")
+                        .formParam("type", "post")
+                        .formParam("owner_id","-203027909")
                         .formParam("item_id",postIdValue)
-                        .post("/likes.add")
+                        .post("/likes.delete")
                         .then()
                         .log().all()
                         .statusCode(200)
@@ -70,31 +84,12 @@ public class LikeAddTest {
                         .extract()
                         .response();
         response.getBody().print();
-        System.out.println("Успешно поставили лайк к созданной записи № " + postIdValue);
     }
 
     @Test(priority = 3)
     void tearDown()
     {
-        System.out.println("Удаляем запись № " + postIdValue);
-
-        Response response =
-                given()
-                        .log().all()
-                        .when()
-                        .header("Content-Type", "application/x-www-form-urlencoded")
-                        .formParam("access_token", ACCESS_TOKEN)
-                        .formParam("v", API_VERSION)
-                        .formParam("type", TYPE_OF_DATA)
-                        .formParam("owner_id",GROUP_ID)
-                        .formParam("post_id",postIdValue)
-                        .post("/wall.delete")
-                        .then()
-                        .log().all()
-                        .statusCode(200)
-                        .body("response",equalTo(1))
-                        .extract()
-                        .response();
-        response.getBody().print();
+        System.out.println("Завершаем тест. Успешно поставили лайк к созданной записи № " + postIdValue);
     }
 }
+
